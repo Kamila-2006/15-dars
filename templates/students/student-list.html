@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}EduLMS - Student List{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h1 style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;">Students</h1>
+                <p style="color: var(--text-light);">Manage and monitor your students</p>
+            </div>
+            <a href="{% url 'students:create' %}" class="btn btn-primary">+ Add New Student</a>
+        </div>
+
+        <div class="card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Email</th>
+                        <th>Enrolled Courses</th>
+                        <th>Progress</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500;">
+                                        👨‍🎓
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 500;">{{ student.first_name }} {{ student.last_name }}</div>
+                                        <div style="font-size: 0.875rem; color: var(--text-light);">ID: {{ student.id }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ student.email }}</td>
+                            <td>
+                                {% for course in student.courses.all %}
+                                    <div class="badge badge-success">{{ course.name }}</div>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    75%
+                                    <div class="progress-bar" style="flex: 1;">
+                                        <div class="progress-bar-fill" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <a href="{% url 'students:detail' student.id %}" class="btn btn-primary">View</a>
+                                    <a href="{% url 'students:delete' student.id %}" class="btn btn-danger">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No students</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if student %}EduLMS - Edit Profile{% else %}EduLMS - Create Student{% endif %}{% endblock %}
+
+{% block content %}
+    <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <div style="margin-bottom: 2rem;">
+            <h1 style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;">{% if student %}Edit Student Profile{% else %}Create New Student{% endif %}</h1>
+            <p style="color: var(--text-light);">{% if student %}Update student{% else %}Add a new student to the system{% endif %}</p>
+        </div>
+
+        <form action="{% if student %}{% url 'students:update' student.id %}{% else %}{% url 'students:create' %}{% endif %}" method="post">
+            {% csrf_token %}
+            <div class="card-grid">
+                <div class="card">
+                    <h3 style="color: var(--text-light); margin-bottom: 1rem;">Personal Information</h3>
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="form-control" required
+                               placeholder="Enter first name" name="first_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="form-control" required
+                               placeholder="Enter last name" name="last_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required
+                               placeholder="Enter email address" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control"
+                               placeholder="Enter phone number" name="phone_number">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: var(--text-light); margin-bottom: 1rem;">Course Enrollment</h3>
+                    <div class="form-group">
+                        <label for="courses">Select Courses</label>
+                        <select multiple id="courses" class="form-control" size="8" name="courses">
+                            {% for course in courses %}
+                                <option value="{{ course.id }}">{{ course.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <p style="color: var(--text-light); font-size: 0.875rem; margin-top: 0.5rem;">
+                            Hold Ctrl/Cmd to select multiple courses
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-2">
+                <h3 style="color: var(--text-light); margin-bottom: 1rem;">Additional Information</h3>
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" class="form-control" rows="4"
+                            placeholder="Add any additional notes about the student" name="notes"></textarea>
+                </div>
+            </div>
+
+            <div class="mt-2" style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary">{% if student %}Update Student{% else %}Create Student{% endif %}</button>
+                {% if student %}
+                    <a href="{% url 'students:detail' student.id %}" class="btn btn-danger">Cancel</a>
+                {% else %}
+                    <a href="{% url 'students:list' %}" class="btn btn-danger">Cancel</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
